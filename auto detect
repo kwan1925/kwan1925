@@ -1,0 +1,35 @@
+import tweepy 
+import ccxt 
+from textblob import TextBlob 
+
+exchange = ccxt.binance()
+
+class TwitterTrendTrader:
+  def __init__(self):
+    # Authenticate to Twitter API
+    auth = tweepy.OAuthHandler(twitter_consumer_key, twitter_consumer_secret)
+    auth.set_access_token(twitter_access_token, twitter_access_token_secret)
+    self.api = tweepy.API(auth)
+
+    # Authenticate to Exchange API
+    exchange.apiKey = api_key 
+    exchange.secret = secret_key
+
+  def check_trends(self, crypto):
+    trends = api.trends_place(1)[0] # Trends for worldwide
+    for trend in trends['trends']:
+      if crypto in trend['name']:
+        sentiment = TextBlob(trend['name']).sentiment
+        if sentiment.polarity > 0:
+          self.buy(crypto)
+        else:
+          self.sell(crypto)
+  
+  def buy(self, crypto):
+    exchange.create_market_buy_order(crypto+'/USDT', 10)
+  
+  def sell(self, crypto):
+    exchange.create_market_sell_order(crypto+'/USDT', 10)
+
+bot = TwitterTrendTrader()
+bot.check_trends('BTC')
